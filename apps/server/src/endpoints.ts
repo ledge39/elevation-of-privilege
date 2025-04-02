@@ -51,6 +51,7 @@ export const createGame =
 
       const numPlayers = Number.parseInt(body.players);
       const turnDuration = Number.parseInt(body.turnDuration);
+      const hotseat = body.hotseat === 'true';
 
       console.log(typeof body.players);
       console.log(body.players);
@@ -64,6 +65,7 @@ export const createGame =
           modelType: body.modelType,
           modelReference: body.modelReference,
           spectatorCredential,
+          hotseat,
         },
       });
 
