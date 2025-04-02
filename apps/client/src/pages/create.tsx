@@ -88,6 +88,7 @@ class Create extends Component<CreateProps, CreateState> {
       turnDuration: DEFAULT_TURN_DURATION,
       provideModelThruAlternativeChannel: false,
       gameMode: DEFAULT_GAME_MODE,
+      hotseat: false,
       modelReference: undefined,
     };
 
@@ -120,6 +121,7 @@ class Create extends Component<CreateProps, CreateState> {
     formData.append('startSuit', this.state.startSuit);
     formData.append('turnDuration', `${this.state.turnDuration}`);
     formData.append('gameMode', this.state.gameMode);
+    formData.append('hotseat', `${this.state.hotseat}`);
     if (this.state.modelReference) {
       formData.append('modelReference', this.state.modelReference);
     }
@@ -330,6 +332,23 @@ class Create extends Component<CreateProps, CreateState> {
                   <option key={`option-${mode}`}>{mode}</option>
                 ))}
               </Input>
+            </Col>
+          </FormGroup>
+          <FormGroup row>
+            <Label sm={2}>Hotseat Mode</Label>
+            <Col sm={10}>
+              <FormGroup check>
+                <Label check>
+                  <Input
+                    type="checkbox"
+                    checked={this.state.hotseat}
+                    onChange={(e) =>
+                      this.setState({ hotseat: e.target.checked })
+                    }
+                  />{' '}
+                  Play in Hotseat mode
+                </Label>
+              </FormGroup>
             </Col>
           </FormGroup>
           <FormGroup row>
