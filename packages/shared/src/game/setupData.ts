@@ -9,4 +9,5 @@ export interface SetupData {
   turnDuration: number;
   spectatorCredential: string;
   modelReference?: string;
+  hotseat?: boolean;
 }
