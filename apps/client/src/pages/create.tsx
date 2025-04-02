@@ -57,6 +57,7 @@ interface CreateState {
   turnDuration: number;
   provideModelThruAlternativeChannel: boolean;
   gameMode: GameMode;
+  hotseat: boolean;
   modelReference?: string;
 }
 
