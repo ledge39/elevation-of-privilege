@@ -51,7 +51,13 @@ export const createGame =
 
       const numPlayers = Number.parseInt(body.players);
       const turnDuration = Number.parseInt(body.turnDuration);
-      const hotseat = body.hotseat === true || body.hotseat === 'true';
+      let hotseat: boolean = false;
+
+      if (typeof body.hotseat === 'string') {
+        hotseat = body.hotseat === 'true';
+      } else if (typeof body.hotseat === 'boolean') {
+        hotseat = body.hotseat;
+      }
 
       console.log(typeof body.players);
       console.log(body.players);
