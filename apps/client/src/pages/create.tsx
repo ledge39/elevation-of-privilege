@@ -153,7 +153,7 @@ class Create extends Component<CreateProps, CreateState> {
 
     // ⏩ Redirect to game in hotseat mode
     if (this.state.hotseat) {
-      const player0Url = `${window.location.origin}/${gameId}/0/${secretMap[0]}`;
+      const player0Url = `${window.location.origin}/${gameId}/0/${secretMap[0]}?hotseat=true`;
       window.location.href = player0Url;
     }
   }

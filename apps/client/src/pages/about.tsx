@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Card, CardBody, CardHeader, Col, Container, Row } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Container, Row, Button } from 'reactstrap';
 
 import Footer from '../components/footer/footer';
 import Logo from '../components/logo/logo';
