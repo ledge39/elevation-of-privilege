@@ -36,6 +36,13 @@ const Board: FC<BoardProps> = ({
   
   console.log('🧠 DEBUG → G.gameMode:', G.gameMode); 
 
+  const hotseat = ctx.setupData?.hotseat ?? false;
+
+  const [activePlayerID, setActivePlayerID] = useState(() => {
+    const stored = localStorage.getItem(`eop-hotseat-${matchID}`);
+    return stored ?? (playerID ?? '0');
+  });
+
   const initialNames = Array.from<string>({
     length: ctx.numPlayers,
   }).fill('No Name');
@@ -105,7 +112,7 @@ const Board: FC<BoardProps> = ({
     void updateNames();
   }, [updateNames]);
 
-  const current = playerID === ctx.currentPlayer;
+  const current = activePlayerID === ctx.currentPlayer;
 
   const isInThreatStage =
     !!ctx.activePlayers &&
@@ -159,7 +166,7 @@ const Board: FC<BoardProps> = ({
             <Status
               G={G}
               ctx={ctx}
-              playerID={playerID}
+              playerID={activePlayerID}
               names={names}
               dealtCard={dealtCard}
               isInThreatStage={isInThreatStage}
@@ -167,7 +174,7 @@ const Board: FC<BoardProps> = ({
           </div>
           {playerID && (
             <Deck
-              cards={G.players[Number.parseInt(playerID)]}
+              cards={G.players[Number.parseInt(activePlayerID)]}
               suit={G.suit}
               /* phase replaced with isInThreatStage. active players is null when not */
               isInThreatStage={isInThreatStage}
@@ -189,7 +196,7 @@ const Board: FC<BoardProps> = ({
       <Sidebar
         G={G}
         ctx={ctx}
-        playerID={playerID ?? SPECTATOR}
+        playerID={activePlayerID}
         matchID={matchID}
         moves={moves}
         isInThreatStage={isInThreatStage}
@@ -205,13 +212,29 @@ const Board: FC<BoardProps> = ({
       />
       <Threatbar
         G={G}
-        playerID={playerID}
+        playerID={activePlayerID}
         model={model}
         names={names}
         moves={moves}
         active={active}
         isInThreatStage={isInThreatStage}
       />
+      {hotseat && ctx.currentPlayer === activePlayerID && (
+    <div className="text-center" style={{ margin: '1rem' }}>
+    <button
+      className="btn btn-primary"
+      onClick={() => {
+        moves.endTurn?.(); // safe call
+        const next = (parseInt(activePlayerID) + 1) % ctx.numPlayers;
+        const nextID = next.toString();
+        localStorage.setItem(`eop-hotseat-${matchID}`, nextID);
+        setActivePlayerID(nextID);
+      }}
+    >
+      End Turn - Hand Over to Player {((parseInt(activePlayerID) + 1) % ctx.numPlayers) + 1}
+    </button>
+  </div>
+)}
     </div>
   );
 };
