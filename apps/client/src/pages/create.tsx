@@ -103,11 +103,11 @@ class Create extends Component<CreateProps, CreateState> {
     this.setState({
       creating: true,
     });
-    // FormData object (with file if required)
-    const formData = new FormData();
 
+    const formData = new FormData();
     formData.append('players', `${this.state.players}`);
     formData.append('modelType', this.state.modelType);
+
     if (this.state.modelType !== ModelType.PRIVACY_ENHANCED) {
       formData.append(
         'model',
@@ -116,13 +116,16 @@ class Create extends Component<CreateProps, CreateState> {
           : JSON.stringify(this.state.model),
       );
     }
+
     for (let i = 0; i < this.state.players; i++) {
       formData.append('names[]', this.state.names[`${i}`]);
     }
+
     formData.append('startSuit', this.state.startSuit);
     formData.append('turnDuration', `${this.state.turnDuration}`);
     formData.append('gameMode', this.state.gameMode);
     formData.append('hotseat', `${this.state.hotseat}`);
+
     if (this.state.modelReference) {
       formData.append('modelReference', this.state.modelReference);
     }
@@ -132,7 +135,6 @@ class Create extends Component<CreateProps, CreateState> {
       body: formData,
     });
 
-    // TODO: zod validation
     const r = (await response.json()) as {
       game: string;
       credentials: string[];
@@ -140,26 +142,29 @@ class Create extends Component<CreateProps, CreateState> {
     };
 
     const gameId = r.game;
+    const secretMap = Object.fromEntries(r.credentials.map((s, i) => [i, s]));
 
     this.setState({
-      secret: Object.fromEntries(r.credentials.map((s, i) => [i, s])),
+      secret: secretMap,
       spectatorSecret: r.spectatorCredential,
       matchID: gameId,
       created: true,
     });
+
+    // ⏩ Redirect to game in hotseat mode
+    if (this.state.hotseat) {
+      const player0Url = `${window.location.origin}/${gameId}/0/${secretMap[0]}`;
+      window.location.href = player0Url;
+    }
   }
 
+  // This method is defined outside of createGame
   onFileRead(): void {
     if (typeof this.fileReader.result !== 'string') {
-      throw new Error(
-        "Expected `fileReader.result` to be a string but it wasn't.",
-      );
+      throw new Error("Expected `fileReader.result` to be a string but it wasn't.");
     }
-    // TODO: validation?
     const model = JSON.parse(this.fileReader.result) as CreateState['model'];
-    this.setState({
-      model,
-    });
+    this.setState({ model });
   }
 
   readJson(e: ChangeEvent<HTMLInputElement>): void {
