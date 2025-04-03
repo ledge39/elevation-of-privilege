@@ -20,6 +20,10 @@ import './board.css';
 
 import type { GameState, ThreatDragonModel } from '@eop/shared';
 
+function getHotseatFlag(ctx: any): boolean {
+  return ctx?.setupData?.hotseat ?? false;
+}
+
 type BoardProps = Pick<
   BoardgameIOBoardProps<GameState>,
   'G' | 'ctx' | 'matchID' | 'moves' | 'playerID' | 'credentials'
@@ -36,7 +40,7 @@ const Board: FC<BoardProps> = ({
   
   console.log('🧠 DEBUG → G.gameMode:', G.gameMode); 
 
-  const hotseat = ctx.setupData?.hotseat ?? false;
+  const hotseat = getHotseatFlag(ctx);
 
   const [activePlayerID, setActivePlayerID] = useState(() => {
     const stored = localStorage.getItem(`eop-hotseat-${matchID}`);
